@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const testRoute = require("./routes/testRoute");
 const authRoutes = require("./routes/auth");
+const quizRoutes = require("./routes/quiz")
 // DB Connection
 mongoose
   .connect(process.env.DATABASE, {
@@ -28,7 +29,7 @@ app.use(cors());
 //My Routes
 app.use("/api", testRoute);
 app.use("/api", authRoutes);
-
+app.use("/api",quizRoutes)
 //PORT
 const port = process.env.PORT || 8000;
 

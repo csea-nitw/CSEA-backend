@@ -40,11 +40,10 @@ var quizSchema = new mongoose.Schema(
       {
         qsType: {
           type: String,
-          required,
+          required: true,
         },
         qsTimeLimit: {
           type: Number,
-          required,
         },
         qsMandatory: {
           type: Boolean,
@@ -53,7 +52,7 @@ var quizSchema = new mongoose.Schema(
         qsText: {
           type: String,
           maxlength: 256,
-          required,
+          required: true,
         },
         qsHint: {
           type: String,
@@ -66,7 +65,7 @@ var quizSchema = new mongoose.Schema(
         },
         answer: {
           type: Number,
-          required,
+          required: true,
           default: 0,
         },
         options: [
