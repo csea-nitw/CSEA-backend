@@ -8,17 +8,17 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const testRoute = require("./routes/testRoute");
-
-//DB Connection
-// mongoose
-//   .connect(process.env.DATABASE, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-//   })
-//   .then(() => {
-//     console.log("DB CONNECTED");
-//   });
+const authRoutes = require("./routes/auth");
+// DB Connection
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log("DB CONNECTED");
+  });
 
 //Middlewares
 app.use(bodyParser.json());
@@ -27,6 +27,7 @@ app.use(cors());
 
 //My Routes
 app.use("/api", testRoute);
+app.use("/api", authRoutes);
 
 //PORT
 const port = process.env.PORT || 8000;
