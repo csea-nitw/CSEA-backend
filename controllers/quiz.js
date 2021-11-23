@@ -59,10 +59,32 @@ exports.getAllAvailableQuizes = (req, res) => {
   });
 };
 
-exports.getQuestions = (req,res) => {
-  const quiz = req.quiz
+exports.getAllQuestions = (req, res) => {
+  const quiz = req.quiz.questions;
   return res.status(200).json(quiz)
-}
+};
+
+exports.getQuestions = (req, res) => {
+  const quiz = req.quiz.questions;
+  const sets = [
+    [0, 2, 4, 6, 7, 8, 9, 11, 12, 13],
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    [0, 1, 2, 3, 4, 5, 10, 11, 12, 13],
+  ];
+  const selectedSet = sets[Math.floor(Math.random() * 4)];
+  const myQuizQuestions = [];
+  selectedSet.forEach((i) => {
+    if (i < quiz.length) myQuizQuestions.push(quiz[i]);
+  });
+  return res.status(200).json({
+    quiz_name: req.quiz.quiz_name,
+    start_date: req.quiz.quiz_start_date,
+    end_date: req.quiz.quiz_end_date,
+    quiz_id: req.quiz.quiz_id,
+    questions: myQuizQuestions,
+  });
+};
 
 exports.addQuestionToQuiz = (req, res) => {
   Quiz.findOneAndUpdate(

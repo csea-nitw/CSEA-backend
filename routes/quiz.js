@@ -8,6 +8,7 @@ const {
   getQuizById,
   addQuestionToQuiz,
   getQuestions,
+  getAllQuestions,
 } = require("../controllers/quiz");
 
 router.post(
@@ -21,6 +22,7 @@ router.param("quizId", getQuizById);
 router.get("/quiz", getAllAvailableQuizes);
 
 router.post("/questions/:quizId", addQuestionToQuiz);
-router.get("/questions/:quizId", getQuestions);
+router.get("/questions/:quizId", getAllQuestions);
+router.get("/attempt/:quizId", getQuestions);
 
 module.exports = router;
