@@ -20,6 +20,12 @@ var quizSchema = new mongoose.Schema(
         option: {
           type: Number,
         },
+        question: {
+          type: String,
+        },
+        correctAnswer: {
+          type: Number,
+        },
       },
     ],
   },

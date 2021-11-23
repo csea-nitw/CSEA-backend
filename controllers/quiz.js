@@ -27,6 +27,19 @@ exports.addNewQuiz = (req, res) => {
   });
 };
 
+exports.getQuizById = (req, res, next, id) => {
+  Quiz.findById(id).exec((err, quiz) => {
+    if (err || !quiz) {
+      return res.status(400).json({
+        id: id,
+        error: "Quiz don't exists in Db",
+      });
+    }
+    req.quiz = quiz;
+    next();
+  });
+};
+
 exports.getAllAvailableQuizes = (req, res) => {
   const errors = validationResult(req);
 
@@ -43,5 +56,28 @@ exports.getAllAvailableQuizes = (req, res) => {
       });
     }
     return res.json(quizes);
+  });
+};
+
+exports.getQuestions = (req,res) => {
+  const quiz = req.quiz
+  return res.status(200).json(quiz)
+}
+
+exports.addQuestionToQuiz = (req, res) => {
+  Quiz.findOneAndUpdate(
+    { _id: req.quiz._id },
+    { $push: { questions: req.body } },
+    { new: true, useFindAndModify: false },
+    (err, quiz) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Unable to save question.. Try again after some time..",
+        });
+      }
+    }
+  );
+  return res.status(200).json({
+    msg: `successfully added the dropdown to quiz ${req.quiz.quiz_name}`,
   });
 };

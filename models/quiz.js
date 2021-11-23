@@ -62,6 +62,7 @@ var quizSchema = new mongoose.Schema(
         qsImageUrl: {
           type: String,
           maxlength: 1024,
+          default: "",
         },
         answer: {
           type: Number,
@@ -77,6 +78,7 @@ var quizSchema = new mongoose.Schema(
             optionUrl: {
               type: String,
               maxlength: 1024,
+              default: "",
             },
           },
         ],
