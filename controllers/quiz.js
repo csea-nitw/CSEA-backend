@@ -61,7 +61,7 @@ exports.getAllAvailableQuizes = (req, res) => {
 
 exports.getAllQuestions = (req, res) => {
   const quiz = req.quiz.questions;
-  return res.status(200).json(quiz)
+  return res.status(200).json(quiz);
 };
 
 exports.getQuestions = (req, res) => {
@@ -75,7 +75,11 @@ exports.getQuestions = (req, res) => {
   const selectedSet = sets[Math.floor(Math.random() * 4)];
   const myQuizQuestions = [];
   selectedSet.forEach((i) => {
-    if (i < quiz.length) myQuizQuestions.push(quiz[i]);
+    if (i < quiz.length) {
+      const question = quiz[i];
+      question.answer = undefined;
+      myQuizQuestions.push(question);
+    }
   });
   return res.status(200).json({
     quiz_name: req.quiz.quiz_name,
