@@ -30,6 +30,7 @@ exports.addNewQuiz = (req, res) => {
 exports.getQuizById = (req, res, next, id) => {
   Quiz.findById(id).exec((err, quiz) => {
     if (err || !quiz) {
+      console.log("err");
       return res.status(400).json({
         id: id,
         error: "Quiz don't exists in Db",
@@ -42,6 +43,7 @@ exports.getQuizById = (req, res, next, id) => {
 
 exports.getAllAvailableQuizes = (req, res) => {
   const errors = validationResult(req);
+  // console.log("hey");
 
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -65,6 +67,7 @@ exports.getAllQuestions = (req, res) => {
 };
 
 exports.getQuestions = (req, res) => {
+  console.log("hey");
   const quiz = req.quiz.questions;
   const sets = [
     [0, 2, 4, 6, 7, 8, 9, 11, 12, 13],
@@ -86,7 +89,7 @@ exports.getQuestions = (req, res) => {
     quiz_name: req.quiz.quiz_name,
     start_date: req.quiz.quiz_start_date,
     end_date: req.quiz.quiz_end_date,
-    quiz_id: req.quiz.quiz_id,
+    quiz_id: req.quiz._id,
     questions: myQuizQuestions,
   });
 };
