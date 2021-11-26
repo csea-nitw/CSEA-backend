@@ -78,6 +78,7 @@ exports.getQuestions = (req, res) => {
     if (i < quiz.length) {
       const question = quiz[i];
       question.answer = undefined;
+      question.qsCode = question._id;
       myQuizQuestions.push(question);
     }
   });

@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongoose");
 var mongoose = require("mongoose");
 
-var quizSchema = new mongoose.Schema(
+var ResponseSchema = new mongoose.Schema(
   {
     participant: {
       type: ObjectId,
@@ -32,4 +32,4 @@ var quizSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Quiz", quizSchema);
+module.exports = mongoose.model("Response", ResponseSchema);

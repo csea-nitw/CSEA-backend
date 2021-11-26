@@ -38,6 +38,10 @@ var quizSchema = new mongoose.Schema(
     },
     questions: [
       {
+        qsCode: {
+          type: String,
+          default: "",
+        },
         qsType: {
           type: String,
           required: true,
