@@ -104,6 +104,6 @@ exports.addQuestionToQuiz = (req, res) => {
     }
   );
   return res.status(200).json({
-    msg: `successfully added the dropdown to quiz ${req.quiz.quiz_name}`,
+    msg: `successfully added to quiz ${req.quiz.quiz_name}`,
   });
 };
