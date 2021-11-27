@@ -87,7 +87,7 @@ exports.getMyScore = (req, res) => {
       responses.name = user.name;
       responses.email = user.email;
     });
-    // console.log(responses.responses);
+    console.log(responses.responses);
     const quiz = Quiz.findById(responses.quiz).exec((err, quiz) => {
       if (err || !quiz) {
         return res.status(400).json({

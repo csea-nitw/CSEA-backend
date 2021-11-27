@@ -20,6 +20,9 @@ mongoose
   })
   .then(() => {
     console.log("DB CONNECTED");
+  })
+  .catch(function (err) {
+    console.error("MongoDB event error: " + err);
   });
 
 //Middlewares
