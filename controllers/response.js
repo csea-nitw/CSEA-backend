@@ -14,6 +14,11 @@ exports.saveResponses = (req, res) => {
   }
 
   const responses = new Responses(req.body);
+  if (!responses.participant) {
+    return res.status(400).json({
+      error: "Unauthorized user",
+    });
+  }
   const user = User.findById(responses.participant).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
@@ -81,6 +86,11 @@ exports.saveResponses = (req, res) => {
 exports.getMyScore = (req, res) => {
   const errors = validationResult(req);
   const { participant } = req.body;
+  if (!participant) {
+    return res.status(400).json({
+      error: "Unauthorized user",
+    });
+  }
   const newResp = [];
   let score = 0;
   Responses.findOne({ participant }, (err, responses) => {
