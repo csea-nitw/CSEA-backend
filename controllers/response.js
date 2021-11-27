@@ -2,6 +2,7 @@ const Responses = require("../models/response");
 const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const Quiz = require("../models/quiz");
+const response = require("../models/response");
 
 exports.saveResponses = (req, res) => {
   const errors = validationResult(req);
@@ -34,33 +35,44 @@ exports.saveResponses = (req, res) => {
     }
     // console.log(quiz)
     else {
-      responses.quiz_name = quiz.quiz_name;
-      const newResp = [];
-      responses.responses.forEach((item) => {
-        quiz.questions.forEach((item2) => {
-          if (item.question == item2._id) {
-            item.correctAnswer = item2.answer;
-            newResp.push(item);
-            if (item.correctAnswer == item.option) {
-              score++;
+      let participant = responses.participant;
+
+      Responses.findOne({ participant }, (err, khem) => {
+        if (!err && khem) {
+          // console.log("already responded");
+          return res.status(500).json({
+            error: "Already responded",
+          });
+        } else {
+          responses.quiz_name = quiz.quiz_name;
+          const newResp = [];
+          responses.responses.forEach((item) => {
+            quiz.questions.forEach((item2) => {
+              if (item.question == item2._id) {
+                item.correctAnswer = item2.answer;
+                newResp.push(item);
+                if (item.correctAnswer == item.option) {
+                  score++;
+                }
+              }
+            });
+          });
+          responses.responses = newResp;
+          responses.score = score;
+          responses.save((err, response) => {
+            if (err) {
+              return res.status(400).json({
+                err: err,
+              });
             }
-          }
-        });
-      });
-      responses.responses = newResp;
-      responses.score = score;
-      responses.save((err, response) => {
-        if (err) {
-          return res.status(400).json({
-            err: err,
+            res.json({
+              participant: response.name,
+              quiz: response.quiz_name,
+              score: response.score,
+              email: response.email,
+            });
           });
         }
-        res.json({
-          participant: response.name,
-          quiz: response.quiz_name,
-          score: response.score,
-          email: response.email,
-        });
       });
     }
   });

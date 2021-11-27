@@ -67,7 +67,7 @@ exports.getAllQuestions = (req, res) => {
 };
 
 exports.getQuestions = (req, res) => {
-  console.log("hey");
+  // console.log("hey");
   const quiz = req.quiz.questions;
   const sets = [
     [0, 2, 4, 6, 7, 8, 9, 11, 12, 13],
