@@ -4,6 +4,11 @@ const User = require("../models/user");
 const Quiz = require("../models/quiz");
 const response = require("../models/response");
 
+exports.setResponseId = (req, res, next, id) => {
+  req.userX = id;
+  next();
+};
+
 exports.saveResponses = (req, res) => {
   const errors = validationResult(req);
   // console.log(req.body);
@@ -83,9 +88,9 @@ exports.saveResponses = (req, res) => {
   });
 };
 
-exports.getMyScore = (req, res) => {
+exports.getMyScore = async (req, res) => {
   const errors = validationResult(req);
-  const { participant } = req.body;
+  const participant = req.userX;
   if (!participant) {
     return res.status(400).json({
       error: "Unauthorized user",
@@ -93,59 +98,47 @@ exports.getMyScore = (req, res) => {
   }
   const newResp = [];
   let score = 0;
-  Responses.findOne({ participant }, (err, responses) => {
-    if (err || !responses) {
+  let name, email, quiz_name;
+  Responses.findOne({ participant }).then((resp) => {
+    if (!resp) {
       return res.status(400).json({
         error: "Attempt quiz first",
       });
     }
-    const user = User.findById(responses.participant).exec((err, user) => {
-      if (err || !user) {
+    const user = User.findById(resp.participant).exec((err, thisUser) => {
+      if (err || !thisUser) {
         return res.status(400).json({
           id: id,
           error: "User Invalid",
         });
       }
-      responses.name = user.name;
-      responses.email = user.email;
-    });
-    console.log(responses.responses);
-    const quiz = Quiz.findById(responses.quiz).exec((err, quiz) => {
-      if (err || !quiz) {
-        return res.status(400).json({
-          id: id,
-          error: "Quiz Invalid",
-        });
-      }
-      // console.log(quiz.questions);
-      const map1 = new Map();
-      quiz.questions.forEach((item2) => {
-        map1.set(item2._id.toString(), item2.answer);
-      });
-      // console.log(map1);
-      responses.responses.forEach((item) => {
-        const ans = map1.get(item.question);
-        item.correctAnswer = ans;
-        newResp.push(item);
-        if (item.correctAnswer == item.option) {
-          score++;
+      const quiz = Quiz.findById(resp.quiz).exec(async (err, thisQuiz) => {
+        if (err || !thisQuiz) {
+          return res.status(400).json({
+            id: id,
+            error: "Quiz Invalid",
+          });
         }
-      });
-      responses.quiz_name = quiz.quiz_name;
-    });
-
-    responses.save((err, response) => {
-      if (err) {
-        return res.status(400).json({
-          err: err,
+        const map1 = new Map();
+        thisQuiz.questions.forEach((item2) => {
+          map1.set(item2._id.toString(), item2.answer);
         });
-      }
-      res.json({
-        participant: response.name,
-        quiz: response.quiz_name,
-        score: score,
-        email: response.email,
-        responses: newResp,
+        // console.log(map1);
+        resp.responses.forEach((item) => {
+          const ans = map1.get(item.question);
+          item.correctAnswer = ans;
+          newResp.push(item);
+          if (item.correctAnswer == item.option) {
+            score++;
+          }
+        });
+        return res.json({
+          participant: thisUser.name,
+          quiz: thisQuiz.quiz_name,
+          score: score,
+          email: thisUser.email,
+          responses: newResp,
+        });
       });
     });
   });
