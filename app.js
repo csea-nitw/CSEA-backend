@@ -11,6 +11,7 @@ const testRoute = require("./routes/testRoute");
 const authRoutes = require("./routes/auth");
 const quizRoutes = require("./routes/quiz");
 const responseRoutes = require("./routes/response");
+const quizmasRoutes = require("./routes/quizmas");
 // DB Connection
 mongoose
   .connect(process.env.DATABASE, {
@@ -35,6 +36,7 @@ app.use("/api", testRoute);
 app.use("/api", authRoutes);
 app.use("/api", quizRoutes);
 app.use("/api", responseRoutes);
+app.use("/api", quizmasRoutes);
 
 //PORT
 const port = process.env.PORT || 8000;

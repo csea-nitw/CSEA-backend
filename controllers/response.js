@@ -3,6 +3,8 @@ const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const Quiz = require("../models/quiz");
 const response = require("../models/response");
+const { forEach } = require("lodash");
+const Scores = require("../models/scores");
 
 exports.setResponseId = (req, res, next, id) => {
   req.userX = id;
@@ -97,49 +99,60 @@ exports.getMyScore = async (req, res) => {
     });
   }
   const newResp = [];
-  let score = 0;
-  let name, email, quiz_name;
-  Responses.findOne({ participant }).then((resp) => {
-    if (!resp) {
+
+  Responses.find({}).then((resps) => {
+    if (!resps) {
       return res.status(400).json({
         error: "Attempt quiz first",
       });
     }
-    const user = User.findById(resp.participant).exec((err, thisUser) => {
-      if (err || !thisUser) {
-        return res.status(400).json({
-          id: id,
-          error: "User Invalid",
-        });
-      }
-      const quiz = Quiz.findById(resp.quiz).exec(async (err, thisQuiz) => {
-        if (err || !thisQuiz) {
+    resps.forEach((resp) => {
+      let score = 0;
+      let name, email, quiz_name;
+      const user = User.findById(resp.participant).exec((err, thisUser) => {
+        if (err || !thisUser) {
           return res.status(400).json({
             id: id,
-            error: "Quiz Invalid",
+            error: "User Invalid",
           });
         }
-        const map1 = new Map();
-        thisQuiz.questions.forEach((item2) => {
-          map1.set(item2._id.toString(), item2.answer);
-        });
-        // console.log(map1);
-        resp.responses.forEach((item) => {
-          const ans = map1.get(item.question);
-          item.correctAnswer = ans;
-          newResp.push(item);
-          if (item.correctAnswer == item.option) {
-            score++;
+        const quiz = Quiz.findById(resp.quiz).exec(async (err, thisQuiz) => {
+          if (err || !thisQuiz) {
+            return res.status(400).json({
+              id: id,
+              error: "Quiz Invalid",
+            });
           }
-        });
-        return res.json({
-          participant: thisUser.name,
-          quiz: thisQuiz.quiz_name,
-          score: score,
-          email: thisUser.email,
-          responses: newResp,
+          const map1 = new Map();
+          thisQuiz.questions.forEach((item2) => {
+            map1.set(item2._id.toString(), item2.answer);
+          });
+          // console.log(map1);
+          resp.responses.forEach((item) => {
+            const ans = map1.get(item.question);
+            item.correctAnswer = ans;
+            newResp.push(item);
+            if (item.correctAnswer == item.option) {
+              score++;
+            }
+          });
+          const scores = new Scores();
+          (scores.quiz_name = thisQuiz.quiz_name),
+            (scores.participant = thisUser.name),
+            (scores.score = score),
+            (scores.responses = newResp),
+            scores.save((err, ss) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(ss);
+              }
+            });
         });
       });
+    });
+    return res.json({
+      done: "done",
     });
   });
 };
