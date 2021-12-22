@@ -22,7 +22,10 @@ var quizmasSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    winners: [],
+    winners: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );

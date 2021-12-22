@@ -32,18 +32,23 @@ exports.getQuestion = (req, res) => {
   if (hours < 20) {
     day = day - 1;
   }
-  const startDate = 16;
+  const startDate = 17;
   day = day - startDate;
-  const todays_question = {};
+  let todays_question = {};
   questions.forEach((qs) => {
     if (qs.day == day) {
-      return res.status(200).json(qs);
+      todays_question = qs;
     }
   });
-
-  return res.status(400).json({
-    err: "something went wrong",
-  });
+  if (todays_question.question) {
+    return res.status(200).json({
+      day,
+      question: todays_question.question,
+    });
+  } else
+    return res.status(400).json({
+      err: "No question added",
+    });
 };
 
 exports.saveResponse = (req, res) => {
@@ -56,7 +61,7 @@ exports.saveResponse = (req, res) => {
       todays_question = qs;
     }
   });
-
+  console.log(todays_question);
   //find user
   const userId = req.body.userId;
   const user = User.findById(userId).exec((err, thisUser) => {
@@ -80,10 +85,10 @@ exports.saveResponse = (req, res) => {
             error: err,
           });
         } else {
-          //   console.log(todays_question);
           if (
+            todays_question &&
             resp.answer.trim().toLowerCase() ==
-            todays_question.answer.trim().toLowerCase()
+              todays_question.answer.trim().toLowerCase()
           ) {
             Quizmas.find({ day }, (err, quizzes) => {
               if (err) {
@@ -93,18 +98,16 @@ exports.saveResponse = (req, res) => {
               } else {
                 let thisQuiz = {};
                 quizzes.forEach((quiz) => {
-                  if (quiz.day === day) {
+                  console.log(day, quiz.day)
+                  if (quiz.day == day) {
                     thisQuiz = quiz;
                   }
                 });
-                const winnersList = thisQuiz.winners;
+                const winnersList = thisQuiz.winners || [];
                 let already_resp = false;
                 winnersList.forEach((winner) => {
                   if (winner._id == userId) {
                     already_resp = true;
-                    return res.status(201).json({
-                      message: "Already responded correctly..",
-                    });
                   }
                 });
                 if (!already_resp) {
@@ -121,9 +124,28 @@ exports.saveResponse = (req, res) => {
                       }
                     }
                   );
+                  User.findOneAndUpdate(
+                    { _id: userId },
+                    {
+                      quizmasScore: thisUser.quizmasScore + 20 - winnersList.length,
+                    },
+                    { new: true, useFindAndModify: false },
+                    (err, participant) => {
+                      if (err) {
+                        res.status(400).json({
+                          error:
+                            "Unable to save response.. Try again after some time..",
+                        });
+                      }
+                    }
+                  );
                   return res.status(200).json({
                     message: "Yayy!! You got it right!! ",
                     expectedRankToday: winnersList.length + 1,
+                  });
+                } else {
+                  return res.status(201).json({
+                    message: "Already responded correctly..",
                   });
                 }
               }

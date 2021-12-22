@@ -39,6 +39,10 @@ var userSchema = new mongoose.Schema(
       type: Number,
       default: 123,
     },
+    quizmasScore: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
