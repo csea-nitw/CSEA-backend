@@ -48,6 +48,7 @@ exports.getQuestion = (req, res) => {
   } else
     return res.status(400).json({
       err: "No question added",
+      day,
     });
 };
 
@@ -98,7 +99,7 @@ exports.saveResponse = (req, res) => {
               } else {
                 let thisQuiz = {};
                 quizzes.forEach((quiz) => {
-                  console.log(day, quiz.day)
+                  console.log(day, quiz.day);
                   if (quiz.day == day) {
                     thisQuiz = quiz;
                   }
@@ -127,7 +128,8 @@ exports.saveResponse = (req, res) => {
                   User.findOneAndUpdate(
                     { _id: userId },
                     {
-                      quizmasScore: thisUser.quizmasScore + 20 - winnersList.length,
+                      quizmasScore:
+                        thisUser.quizmasScore + 20 - winnersList.length,
                     },
                     { new: true, useFindAndModify: false },
                     (err, participant) => {
