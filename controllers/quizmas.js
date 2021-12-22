@@ -50,6 +50,7 @@ exports.getQuestion = (req, res) => {
     return res.status(400).json({
       err: "No question added",
       day,
+      hours,
     });
 };
 
