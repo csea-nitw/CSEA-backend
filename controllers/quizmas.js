@@ -43,6 +43,7 @@ exports.getQuestion = (req, res) => {
   if (todays_question.question) {
     return res.status(200).json({
       day,
+      hours,
       question: todays_question.question,
     });
   } else
