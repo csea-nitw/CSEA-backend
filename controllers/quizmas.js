@@ -160,9 +160,16 @@ exports.saveResponse = (req, res) => {
               "Just there.. Try again..",
               "You’re on the right track, but not there yet.",
               "Interesting . . . it’s not exactly what we are looking for, but try again.",
+              "Close. Don't worry you ain't that far",
+              "Almost there... Don't give up",
+              "You lost the battle not war, try again.. Almost there buddy",
+              "Don't give up before miracle happens",
+              "Victory is right around the corner",
+              "Try once again who knows you hit the jackpot this time",
+              "Try once again who knows you hit the jackpot",
             ];
             return res.status(202).json({
-              message: messages[Math.floor(Math.random() * 3)],
+              message: messages[Math.floor(Math.random() * 9)],
               expectedRankToday: "",
             });
           }
