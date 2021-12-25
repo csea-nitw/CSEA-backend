@@ -33,8 +33,7 @@ exports.getQuestion = (req, res) => {
     day = day - 1;
   }
   const startDate = 17;
-  day = day - startDate;
-  let todays_question = {};
+  day = 2;
   questions.forEach((qs) => {
     if (qs.day == day) {
       todays_question = qs;
@@ -90,8 +89,7 @@ exports.saveResponse = (req, res) => {
         } else {
           if (
             todays_question &&
-            resp.answer.trim().toLowerCase() ==
-              todays_question.answer.trim().toLowerCase()
+            todays_question.answer.includes(resp.answer.trim().toLowerCase())
           ) {
             Quizmas.find({ day }, (err, quizzes) => {
               if (err) {
