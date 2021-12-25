@@ -64,7 +64,7 @@ exports.saveResponse = (req, res) => {
       todays_question = qs;
     }
   });
-  console.log(todays_question);
+  // console.log(todays_question);
   //find user
   const userId = req.body.userId;
   const user = User.findById(userId).exec((err, thisUser) => {
@@ -101,7 +101,7 @@ exports.saveResponse = (req, res) => {
               } else {
                 let thisQuiz = {};
                 quizzes.forEach((quiz) => {
-                  console.log(day, quiz.day);
+                  // console.log(day, quiz.day);
                   if (quiz.day == day) {
                     thisQuiz = quiz;
                   }
@@ -120,9 +120,9 @@ exports.saveResponse = (req, res) => {
                     { new: true, useFindAndModify: false },
                     (err, quiz) => {
                       if (err) {
-                        res.status(400).json({
+                        res.status(201).json({
                           error:
-                            "Unable to save response.. Try again after some time..",
+                            "Unable to save response.. Please, Try again after some time..",
                         });
                       }
                     }
@@ -130,13 +130,15 @@ exports.saveResponse = (req, res) => {
                   User.findOneAndUpdate(
                     { _id: userId },
                     {
-                      quizmasScore:
-                        thisUser.quizmasScore + 20 - winnersList.length,
+                      quizmasScore: Math.max(
+                        10,
+                        thisUser.quizmasScore + 20 - winnersList.length
+                      ),
                     },
                     { new: true, useFindAndModify: false },
                     (err, participant) => {
                       if (err) {
-                        res.status(400).json({
+                        res.status(201).json({
                           error:
                             "Unable to save response.. Try again after some time..",
                         });
@@ -150,6 +152,7 @@ exports.saveResponse = (req, res) => {
                 } else {
                   return res.status(201).json({
                     message: "Already responded correctly..",
+                    expectedRankToday: "",
                   });
                 }
               }
@@ -162,6 +165,7 @@ exports.saveResponse = (req, res) => {
             ];
             return res.status(202).json({
               message: messages[Math.floor(Math.random() * 3)],
+              expectedRankToday: "",
             });
           }
         }
