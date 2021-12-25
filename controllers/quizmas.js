@@ -33,7 +33,7 @@ exports.getQuestion = (req, res) => {
     day = day - 1;
   }
   const startDate = 17;
-  day = 2;
+  day = 1;
   questions.forEach((qs) => {
     if (qs.day == day) {
       todays_question = qs;
