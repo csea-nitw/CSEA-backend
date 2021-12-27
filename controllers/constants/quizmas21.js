@@ -28,7 +28,7 @@ const questions = [
     day: 3,
     question:
       "Bob came across a question about a famous person in the history of computer science during an event at Christmas. Bob sat and tried to recollect whatever he read about the history of computer science, but in vain. So Bob decided to seek the help of Santa. He decided to ask Santa the same question. “Description is as follows, created an abstract machine that was used to manipulate symbols on a tape, which was used in world war 2. There is also an award in computer science named after that person, even though he/she died at a young age. Who is that person?”. Help Bob to answer this question and get a prize for himself.",
-    answer: ["alan Turing", "allen turing", "turing", "turing machine"],
+    answer: ["alan turing", "allen turing", "turing", "turing machine"],
     createdAt: "2021-12-25T09:12:04.788Z",
     updatedAt: "2021-12-25T09:12:04.788Z",
     __v: 0,
