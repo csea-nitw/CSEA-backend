@@ -86,6 +86,14 @@ const questions = [
     question:
       "For Christmas, a child asked Santa a riddle. Since, Santa is not good at riddles, he needs your help to solve this riddle. The riddle is : The domain that this country was assigned for its internet addresses became the metonym that tech giants in the field of live streamed shows and competitive video-gaming licensed from it; due to the nature of the domain and its associations.  Identify the country and the domain.",
     answer: [
+      "tuvulu, .tv",
+      "tuvulu, tv",
+      ".tv, tuvulu",
+      "tv, tuvulu",
+      "tuvulu .tv",
+      "tuvulu tv",
+      ".tv tuvulu",
+      "tv tuvulu",
       "tuvalu, .tv",
       "tuvalu, tv",
       ".tv, tuvalu",
