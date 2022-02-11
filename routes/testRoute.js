@@ -5,7 +5,18 @@ router.get("/test", (req, res) => {
   const date = new Date().getDate();
   res.status(200).json({
     date,
-    msg: "hey successfully tested",
+    msg: [
+      "super",
+      "caring",
+      "honest",
+      "smart",
+      "cute",
+      "hardworking",
+      "great",
+      "adept",
+      "brave",
+      "capable",
+    ],
   });
 });
 
